@@ -27,7 +27,7 @@
     "TechStack": "python,beautifulsoup,vector-database",
     "Description": "Unlinked is a web scraper designed to identify and detect unrelated links in community-based posts, such as those on platforms like StackOverflow, Medium, and similar forums.",
     "Tags": [
-      "pyton",
+      "python",
       "scraper",
       "embedding",
       "vector-database"
