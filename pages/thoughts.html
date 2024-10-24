@@ -72,10 +72,9 @@
 
           thoughtDiv.addEventListener("click", async () => {
             const blogResponse = await fetch(thought.link); // Fetch blog content (.mdx)
-            const blogContent = await blogResponse.text();
 
             // Parse the markdown content
-            const parsedContent = marked.parse(blogContent);
+            const parsedContent = marked.parse(blogResponse);
 
             // Update the body with parsed HTML
             document.body.innerHTML = `
