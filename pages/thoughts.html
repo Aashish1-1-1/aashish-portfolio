@@ -59,7 +59,7 @@
             "rounded-lg",
             "shadow-lg",
             "bg-white",
-            "rectangular", // Add rectangular class for the shape
+            "rectangular",
             "cursor-pointer",
             "transition",
             "transform",
@@ -67,18 +67,22 @@
           );
 
           thoughtDiv.innerHTML = `
-            <h2 class="text-xl font-bold mb-2">${thought.Title}</h2>
-          `;
+                    <h2 class="text-xl font-bold mb-2">${thought.Title}</h2>
+                `;
 
           thoughtDiv.addEventListener("click", async () => {
             const blogResponse = await fetch(thought.link); // Fetch blog content (.mdx)
             const blogContent = await blogResponse.text();
 
+            // Parse the markdown content
+            const parsedContent = marked.parse(blogContent);
+
+            // Update the body with parsed HTML
             document.body.innerHTML = `
-              <div class="prose max-w-none prose-lg mt-6 p-4 bg-gray-100 rounded-lg shadow">
-                ${marked.parse(blogContent)}
-              </div>
-            `;
+                        <div class="prose max-w-none prose-lg mt-6 p-4 bg-gray-100 rounded-lg shadow">
+                            ${parsedContent}
+                        </div>
+                    `;
           });
 
           container.appendChild(thoughtDiv);
