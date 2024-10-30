@@ -6,7 +6,7 @@
   <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet" />
   <link href="https://unpkg.com/@tailwindcss/typography@^0.5.2/dist/typography.min.css" rel="stylesheet" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.jsdelivr.net/npm/showdown@<version>/dist/showdown.min.js"></script>
+  <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
   <style>
     .rectangular {
       height: 200px;
@@ -62,8 +62,8 @@
         );
 
         thoughtDiv.innerHTML = `
-                      <h2 class="text-xl font-bold mb-2">${thought.Title}</h2>
-                  `;
+                        <h2 class="text-xl font-bold mb-2">${thought.Title}</h2>
+                    `;
 
         thoughtDiv.addEventListener("click", async () => {
           const blogResponse = await fetch(thought.link);
@@ -71,10 +71,10 @@
           const blogContent = await blogResponse.text();
           const parsedContent = converter.makeHtml(blogContent);
           document.body.innerHTML = `
-                          <div class="prose max-w-none prose-lg mt-6 p-4 bg-gray-100 rounded-lg shadow">
-                              ${parsedContent}
-                          </div>
-                      `;
+                            <div class="prose max-w-none prose-lg mt-6 p-4 bg-gray-100 rounded-lg shadow">
+                                ${parsedContent}
+                            </div>
+                        `;
         });
 
         container.appendChild(thoughtDiv);
