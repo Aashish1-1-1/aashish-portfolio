@@ -1,94 +1,88 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Aashish Adhikari - Thoughts</title>
-    <link
-      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://unpkg.com/@tailwindcss/typography@^0.5.2/dist/typography.min.css"
-      rel="stylesheet"
-    />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-      /* Additional styling for rectangular divs */
-      .rectangular {
-        height: 200px; /* Modify to adjust the height */
-        width: 100%; /* Rectangular width */
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-      }
-      img {
-        max-width: 100%;
-        border-radius: 0.5rem;
-      }
-      a {
-        color: #3498db;
-        text-decoration: underline;
-      }
-      a:hover {
-        color: #1d68a7;
-      }
-    </style>
-  </head>
 
-  <body class="bg-white text-gray-900">
-    <div class="container mx-auto p-4">
-      <h1 class="text-3xl font-bold mb-6">My Thoughts</h1>
-      <div
-        id="thoughtsContainer"
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-      ></div>
-    </div>
+<head>
+  <title>Aashish Adhikari - Thoughts</title>
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://unpkg.com/@tailwindcss/typography@^0.5.2/dist/typography.min.css" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/showdown@<version>/dist/showdown.min.js"></script>
+  <style>
+    .rectangular {
+      height: 200px;
+      width: 100%;
+      /* Rectangular width */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-    <script>
-      async function loadThoughts() {
-        const response = await fetch("/pages/assets/thoughts.json");
-        const thoughts = await response.json();
+    img {
+      max-width: 100%;
+      border-radius: 0.5rem;
+    }
 
-        const container = document.getElementById("thoughtsContainer");
+    a {
+      color: #3498db;
+      text-decoration: underline;
+    }
 
-        thoughts.forEach((thought) => {
-          const thoughtDiv = document.createElement("div");
-          thoughtDiv.classList.add(
-            "border",
-            "p-4",
-            "rounded-lg",
-            "shadow-lg",
-            "bg-white",
-            "rectangular",
-            "cursor-pointer",
-            "transition",
-            "transform",
-            "hover:scale-105",
-          );
+    a:hover {
+      color: #1d68a7;
+    }
+  </style>
+</head>
 
-          thoughtDiv.innerHTML = `
-                    <h2 class="text-xl font-bold mb-2">${thought.Title}</h2>
-                `;
+<body class="bg-white text-gray-900">
+  <div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-6">My Thoughts</h1>
+    <div id="thoughtsContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+  </div>
 
-          thoughtDiv.addEventListener("click", async () => {
-            const blogResponse = await fetch(thought.link); // Fetch blog content (.mdx)
+  <script>
+    async function loadThoughts() {
+      const response = await fetch("/pages/assets/thoughts.json");
+      const thoughts = await response.json();
 
-            // Parse the markdown content
-            const parsedContent = marked.parse(blogResponse);
+      const container = document.getElementById("thoughtsContainer");
 
-            // Update the body with parsed HTML
-            document.body.innerHTML = `
-                        <div class="prose max-w-none prose-lg mt-6 p-4 bg-gray-100 rounded-lg shadow">
-                            ${parsedContent}
-                        </div>
-                    `;
-          });
+      thoughts.forEach((thought) => {
+        const thoughtDiv = document.createElement("div");
+        thoughtDiv.classList.add(
+          "border",
+          "p-4",
+          "rounded-lg",
+          "shadow-lg",
+          "bg-white",
+          "rectangular",
+          "cursor-pointer",
+          "transition",
+          "transform",
+          "hover:scale-105",
+        );
 
-          container.appendChild(thoughtDiv);
+        thoughtDiv.innerHTML = `
+                      <h2 class="text-xl font-bold mb-2">${thought.Title}</h2>
+                  `;
+
+        thoughtDiv.addEventListener("click", async () => {
+          const blogResponse = await fetch(thought.link);
+          var converter = new showdown.Converter(),
+          const blogContent = await blogResponse.text();
+          const parsedContent = converter.makeHtml(blogContent);
+          document.body.innerHTML = `
+                          <div class="prose max-w-none prose-lg mt-6 p-4 bg-gray-100 rounded-lg shadow">
+                              ${parsedContent}
+                          </div>
+                      `;
         });
-      }
 
-      loadThoughts();
-    </script>
-  </body>
+        container.appendChild(thoughtDiv);
+      });
+    }
+
+    loadThoughts();
+  </script>
+</body>
+
 </html>
