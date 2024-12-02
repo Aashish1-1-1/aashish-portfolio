@@ -1,88 +1,103 @@
 <!doctype html>
-<html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aashish Blogs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.0.12/lib/marked.min.js"></script>
+    <!-- For converting Markdown to HTML -->
+  </head>
 
-<head>
-  <title>Aashish Adhikari - Thoughts</title>
-  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet" />
-  <link href="https://unpkg.com/@tailwindcss/typography@^0.5.2/dist/typography.min.css" rel="stylesheet" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
-  <style>
-    .rectangular {
-      height: 200px;
-      width: 100%;
-      /* Rectangular width */
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+  <body class="bg-gray-100 font-sans">
+    <!-- Container for the Blogs -->
+    <div class="max-w-7xl mx-auto p-4">
+      <!-- Header Section -->
+      <header class="text-center py-6">
+        <h1 class="text-4xl font-semibold text-gray-800">Aashish Thoughts</h1>
+        <p class="text-gray-600">I write once in a blue moon</p>
+      </header>
 
-    img {
-      max-width: 100%;
-      border-radius: 0.5rem;
-    }
+      <!-- Blog List -->
+      <div id="blogList" class="space-y-6">
+        <!-- Blog items will be injected here dynamically -->
+      </div>
 
-    a {
-      color: #3498db;
-      text-decoration: underline;
-    }
+      <!-- Blog Content Display Area -->
+      <div
+        id="blogContent"
+        class="mt-12 bg-white shadow-lg rounded-lg p-6 hidden"
+      >
+        <h2 id="blogTitle" class="text-3xl font-semibold text-gray-800">
+          Blog Title
+        </h2>
+        <div id="blogBody" class="text-gray-600 mt-4">
+          <!-- Markdown content will be injected here -->
+        </div>
+      </div>
+    </div>
 
-    a:hover {
-      color: #1d68a7;
-    }
-  </style>
-</head>
+    <!-- Simple Script to Fetch Blog Content -->
+    <script>
+      // Function to fetch JSON data for blogs
+      async function fetchBlogData() {
+        const response = await fetch("/pages/assets/thoughts.json");
+        const data = await response.json();
+        return data;
+      }
 
-<body class="bg-white text-gray-900">
-  <div class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-6">My Thoughts</h1>
-    <div id="thoughtsContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-  </div>
+      // Function to render the list of blogs dynamically
+      async function renderBlogs() {
+        const blogData = await fetchBlogData();
+        const blogListElement = document.getElementById("blogList");
 
-  <script>
-    async function loadThoughts() {
-      const response = await fetch("/pages/assets/thoughts.json");
-      const thoughts = await response.json();
+        blogData.forEach((blog, index) => {
+          const blogItem = document.createElement("div");
+          blogItem.classList.add(
+            "blog-item",
+            "bg-white",
+            "shadow-md",
+            "rounded-lg",
+            "p-6",
+            "cursor-pointer",
+            "hover:shadow-lg",
+            "transition-shadow",
+            "duration-300",
+          );
+          blogItem.setAttribute("onclick", `fetchBlogContent(${index})`);
 
-      const container = document.getElementById("thoughtsContainer");
+          blogItem.innerHTML = `
+                    <h2 class="text-xl font-bold text-gray-800">${blog.Title}</h2>
+                    <p class="text-gray-600 mt-2">Click to read more...</p>
+                `;
 
-      thoughts.forEach((thought) => {
-        const thoughtDiv = document.createElement("div");
-        thoughtDiv.classList.add(
-          "border",
-          "p-4",
-          "rounded-lg",
-          "shadow-lg",
-          "bg-white",
-          "rectangular",
-          "cursor-pointer",
-          "transition",
-          "transform",
-          "hover:scale-105",
-        );
-
-        thoughtDiv.innerHTML = `
-                        <h2 class="text-xl font-bold mb-2">${thought.Title}</h2>
-                    `;
-
-        thoughtDiv.addEventListener("click", async () => {
-          const blogResponse = await fetch(thought.link);
-          var converter = new showdown.Converter(),
-          const blogContent = await blogResponse.text();
-          const parsedContent = converter.makeHtml(blogContent);
-          document.body.innerHTML = `
-                            <div class="prose max-w-none prose-lg mt-6 p-4 bg-gray-100 rounded-lg shadow">
-                                ${parsedContent}
-                            </div>
-                        `;
+          blogListElement.appendChild(blogItem);
         });
+      }
 
-        container.appendChild(thoughtDiv);
-      });
-    }
+      // Function to fetch and display the Markdown content
+      async function fetchBlogContent(index) {
+        const blogData = await fetchBlogData();
+        const blog = blogData[index];
 
-    loadThoughts();
-  </script>
-</body>
+        // Hide the list and show the blog content area
+        document.getElementById("blogList").classList.add("hidden");
+        document.getElementById("blogContent").classList.remove("hidden");
 
+        // Fetch the Markdown content
+        const markdownResponse = await fetch(blog.link); // Assuming this URL serves the .md file
+        const markdownText = await markdownResponse.text();
+
+        // Convert Markdown to HTML
+        const htmlContent = marked(markdownText);
+
+        // Set the content dynamically
+        document.getElementById("blogTitle").textContent = blog.Title;
+        document.getElementById("blogBody").innerHTML = htmlContent;
+      }
+
+      // Render the blogs when the page loads
+      window.onload = renderBlogs;
+    </script>
+  </body>
 </html>
