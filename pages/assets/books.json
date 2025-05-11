@@ -1,5 +1,13 @@
 [
   {
+    "Name": "Surely You're Joking, Mr. Feynman!",
+    "Genre": "Variety of instance in Feynman's life",
+    "Author": "Richard Feynman",
+    "Status/Completed date": "2025",
+    "Img_url": "https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/SurelyYoureJokingMrFeynman.PNG/250px-SurelyYoureJokingMrFeynman.PNG",
+    "Description": "I found his life so cool. Touches different experiences of life from picking up from bar to  Manhattan project"
+  },
+  {
     "Name": "Programming Ground Up",
     "Genre": "Computer Architecture and Assembly Programming",
     "Author": "Jonathan Bartlett",

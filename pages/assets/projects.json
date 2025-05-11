@@ -1,5 +1,17 @@
 [
   {
+    "name": "Aashish1-1-1/betterpipeline",
+    "link": "https://github.com/Aashish1-1-1/betterpipeline",
+    "TechStack": "Python,spacy",
+    "Description": "A pipeline for webcrawler for identification of the site that are important to crawl, identification also means to eliminate scammy websites",
+    "Tags": [
+      "python",
+      "spacy",
+      "embedding",
+      "heap"
+    ]
+  },
+  {
     "name": "Aashish1-1-1/DailyDoseofAlgo",
     "link": "https://github.com/Aashish1-1-1/DailyDoseofAlgo",
     "TechStack": "React,Goling(gin),Postgres,Jwt",
